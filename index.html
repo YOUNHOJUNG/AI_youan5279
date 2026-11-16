@@ -1,0 +1,1518 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>나에게 맞는 직무 유형 테스트</title>
+    <meta
+      name="description"
+      content="12개 대학생활 질문으로 내 일하는 스타일을 알아보고 어울리는 직무(기획·개발·디자인·데이터)와 추천 자격증·과목을 확인하는 진로 탐색 테스트입니다."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css"
+    />
+    <style>
+      :root {
+        --font-sans: "Pretendard Variable", "Pretendard", "Plus Jakarta Sans",
+          -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR",
+          sans-serif;
+        --font-display: "Plus Jakarta Sans", "Pretendard Variable", "Pretendard",
+          sans-serif;
+        --bg-default: radial-gradient(
+            1100px 620px at 12% -8%,
+            rgba(196, 181, 253, 0.34),
+            transparent 62%
+          ),
+          radial-gradient(
+            900px 540px at 92% 108%,
+            rgba(221, 214, 254, 0.42),
+            transparent 60%
+          ),
+          #f6f3ff;
+        --ink-primary: #1f1638;
+        --accent-violet: #6d28d9;
+        --accent-violet-hover: #5b21b6;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        font-family: var(--font-sans);
+        color: var(--ink-primary);
+        background-color: #f6f3ff;
+        -webkit-font-smoothing: antialiased;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        background: var(--bg-default);
+        color: var(--ink-primary);
+      }
+
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: inherit;
+      }
+
+      button:focus-visible {
+        outline: 2px solid #7c3aed;
+        outline-offset: 2px;
+      }
+
+      .font-display-num {
+        font-family: var(--font-display);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .app-wrapper {
+        min-height: 100dvh;
+        width: 100%;
+        transition: background 0.35s ease;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+
+      .quiz-container {
+        width: 100%;
+        max-width: 672px;
+        min-height: 100dvh;
+        margin: 0 auto;
+        padding: 16px 16px 32px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Animations */
+      @keyframes fadeSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px) scale(0.988);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes choicePop {
+        0% {
+          transform: scale(1);
+        }
+        35% {
+          transform: scale(1.035);
+        }
+        70% {
+          transform: scale(0.985);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .animate-enter {
+        animation: fadeSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .animate-choice-pop {
+        animation: choicePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      /* Start Screen */
+      .start-shell {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .card-surface {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid #e6dfff;
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 18px 48px -16px rgba(109, 40, 217, 0.14);
+      }
+
+      .start-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .start-visual {
+        order: 1;
+        border-radius: 18px;
+        border: 1px solid #ece6ff;
+        background: #f5f2ff;
+        overflow: hidden;
+      }
+
+      .start-copy {
+        order: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .kicker {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #6d28d9;
+      }
+
+      .start-title {
+        margin: 10px 0 0;
+        font-size: 34px;
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: #1f1638;
+        text-wrap: balance;
+      }
+
+      .start-desc {
+        margin: 16px 0 0;
+        font-size: 16px;
+        line-height: 1.7;
+        color: #43395e;
+        max-width: 440px;
+      }
+
+      .start-meta {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #645a82;
+      }
+
+      .btn-primary {
+        margin-top: 28px;
+        width: 100%;
+        min-height: 60px;
+        padding: 16px 32px;
+        border-radius: 16px;
+        background: #6d28d9;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 10px 24px -6px rgba(109, 40, 217, 0.45);
+        transition: transform 0.16s ease, background-color 0.16s ease;
+      }
+
+      .btn-primary:hover {
+        background: #5b21b6;
+        transform: translateY(-2px);
+      }
+
+      .btn-primary:active {
+        transform: scale(0.96);
+      }
+
+      /* Quiz Screen */
+      .quiz-header-row {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .btn-back {
+        min-height: 48px;
+        padding: 0 12px;
+        margin-left: -8px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #524673;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: background-color 0.15s ease;
+      }
+
+      .btn-back:hover {
+        background: #ede7ff;
+        color: #1f1638;
+      }
+
+      .quiz-brand {
+        font-size: 15px;
+        font-weight: 700;
+        color: #524673;
+      }
+
+      .quiz-counter {
+        font-size: 16px;
+        font-weight: 800;
+        color: #6d28d9;
+      }
+
+      .progress-track {
+        margin-top: 8px;
+        height: 12px;
+        width: 100%;
+        border-radius: 999px;
+        background: #e8e0ff;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);
+        transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .quiz-stage {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px 0;
+      }
+
+      .question-card {
+        background: #ffffff;
+        border: 1px solid #e6dfff;
+        border-radius: 24px;
+        padding: 22px 20px;
+        box-shadow: 0 16px 40px -14px rgba(109, 40, 217, 0.14);
+      }
+
+      .question-situation {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #6d28d9;
+      }
+
+      .question-title {
+        margin: 12px 0 0;
+        font-size: 22px;
+        font-weight: 800;
+        line-height: 1.42;
+        letter-spacing: -0.015em;
+        color: #1f1638;
+        text-wrap: balance;
+      }
+
+      .options-list {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .option-btn {
+        width: 100%;
+        min-height: 88px;
+        padding: 18px 16px;
+        border-radius: 18px;
+        border: 2px solid #ece6ff;
+        background: #fbf9ff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        text-align: left;
+        transition: transform 0.15s ease, border-color 0.15s ease,
+          background-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .option-btn:hover:not(:disabled) {
+        border-color: #c4b5fd;
+        background: #f5f0ff;
+        transform: translateY(-2px);
+      }
+
+      .option-btn:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+
+      .option-btn.is-selected {
+        border-color: #7c3aed;
+        background: #f3eeff;
+        box-shadow: 0 8px 20px -8px rgba(124, 58, 237, 0.32);
+      }
+
+      .option-left {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .option-badge {
+        flex-shrink: 0;
+        margin-top: 2px;
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: #ede6ff;
+        color: #5b21b6;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.15s ease, color 0.15s ease;
+      }
+
+      .option-btn.is-selected .option-badge {
+        background: #6d28d9;
+        color: #ffffff;
+      }
+
+      .option-label {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.55;
+        color: #22183e;
+      }
+
+      .option-check {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: #6d28d9;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: scale(0.75);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+      }
+
+      .option-btn.is-selected .option-check {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* Result Screen */
+      .result-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .result-hero-card {
+        border-radius: 24px;
+        border: 1px solid var(--role-border);
+        background: var(--role-hero-bg);
+        padding: 24px;
+        box-shadow: 0 20px 50px -16px rgba(31, 22, 56, 0.14);
+      }
+
+      .result-hero-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .result-visual {
+        order: 1;
+        max-width: 300px;
+        width: 100%;
+        margin: 0 auto;
+        border-radius: 22px;
+        border: 1px solid var(--role-border);
+        background: var(--role-soft);
+        overflow: hidden;
+      }
+
+      .result-copy {
+        order: 2;
+      }
+
+      .result-kicker {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .result-title {
+        margin: 12px 0 0;
+        font-size: 38px;
+        font-weight: 900;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+        color: var(--role-ink);
+        text-wrap: balance;
+      }
+
+      .result-nickname {
+        margin: 12px 0 0;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.4;
+        color: var(--role-accent-text);
+      }
+
+      .result-desc {
+        margin: 16px 0 0;
+        font-size: 16px;
+        line-height: 1.75;
+        color: #352c50;
+      }
+
+      .strengths-box {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--role-border);
+      }
+
+      .strengths-heading {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: #5e547a;
+      }
+
+      .strengths-list {
+        list-style: none;
+        margin: 12px 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 15px;
+        color: #281e42;
+      }
+
+      .strengths-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.55;
+      }
+
+      .strength-dot {
+        margin-top: 8px;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--role-accent);
+        flex-shrink: 0;
+      }
+
+      .result-bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .result-panel {
+        border-radius: 24px;
+        border: 1px solid var(--role-border);
+        background: rgba(255, 255, 255, 0.96);
+        padding: 24px;
+        box-shadow: 0 12px 36px -14px rgba(31, 22, 56, 0.1);
+      }
+
+      .panel-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .panel-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--role-ink);
+      }
+
+      .panel-sub {
+        font-size: 14px;
+        font-weight: 600;
+        color: #6c618b;
+      }
+
+      .rec-list {
+        list-style: none;
+        margin: 16px 0 0;
+        padding: 0;
+      }
+
+      .rec-item {
+        padding: 16px 0;
+        border-top: 1px solid var(--role-bar-track);
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .rec-item:first-child {
+        border-top: none;
+        padding-top: 6px;
+      }
+
+      .rec-item:last-child {
+        padding-bottom: 4px;
+      }
+
+      .rec-num {
+        flex-shrink: 0;
+        margin-top: 2px;
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        background: var(--role-soft);
+        color: var(--role-accent-text);
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .rec-title-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 8px;
+      }
+
+      .rec-title {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 700;
+        color: #1f1638;
+      }
+
+      .rec-cat {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--role-accent);
+      }
+
+      .rec-reason {
+        margin: 6px 0 0;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #463d62;
+      }
+
+      .dist-list {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .dist-row-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+      }
+
+      .dist-track {
+        margin-top: 8px;
+        height: 10px;
+        width: 100%;
+        border-radius: 999px;
+        background: var(--role-bar-track);
+        overflow: hidden;
+      }
+
+      .dist-fill {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .starter-tip {
+        margin-top: 24px;
+        border-radius: 16px;
+        background: var(--role-soft);
+        padding: 16px 18px;
+      }
+
+      .starter-tip-label {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--role-accent-text);
+      }
+
+      .starter-tip-text {
+        margin: 6px 0 0;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #342a4f;
+      }
+
+      .result-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 6px;
+      }
+
+      .btn-share {
+        width: 100%;
+        min-height: 58px;
+        padding: 16px 28px;
+        border-radius: 16px;
+        border: 2px solid var(--role-border);
+        background: #ffffff;
+        color: var(--role-ink);
+        font-size: 17px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(31, 22, 56, 0.05);
+        transition: transform 0.15s ease, background-color 0.15s ease;
+      }
+
+      .btn-share:active {
+        transform: scale(0.96);
+      }
+
+      .btn-restart {
+        width: 100%;
+        min-height: 58px;
+        padding: 16px 32px;
+        border-radius: 16px;
+        background: var(--role-accent);
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 12px 28px -6px rgba(31, 22, 56, 0.28);
+        transition: transform 0.15s ease, opacity 0.15s ease;
+      }
+
+      .btn-restart:hover {
+        opacity: 0.94;
+        transform: translateY(-2px);
+      }
+
+      .btn-restart:active {
+        transform: scale(0.96);
+      }
+
+      /* Tablet & Desktop Breakpoints */
+      @media (min-width: 640px) {
+        .container {
+          padding: 40px 32px;
+        }
+        .quiz-container {
+          padding: 32px 24px 40px;
+        }
+        .card-surface {
+          padding: 40px;
+        }
+        .question-card {
+          padding: 36px;
+        }
+        .option-btn {
+          padding: 20px 24px;
+        }
+        .option-left {
+          align-items: center;
+        }
+        .option-badge {
+          margin-top: 0;
+        }
+        .result-hero-card {
+          padding: 36px;
+        }
+        .result-panel {
+          padding: 32px;
+        }
+        .result-title {
+          font-size: 48px;
+        }
+        .btn-primary {
+          width: auto;
+          min-height: 56px;
+          font-size: 16px;
+        }
+        .result-actions {
+          flex-direction: row;
+          justify-content: center;
+          gap: 16px;
+        }
+        .btn-share,
+        .btn-restart {
+          width: auto;
+          min-width: 190px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .result-hero-grid {
+          grid-template-columns: 7fr 5fr;
+          gap: 40px;
+        }
+        .result-copy {
+          order: 1;
+        }
+        .result-visual {
+          order: 2;
+          max-width: none;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .card-surface {
+          padding: 48px;
+        }
+        .start-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+        }
+        .start-copy {
+          order: 1;
+        }
+        .start-visual {
+          order: 2;
+        }
+        .start-title {
+          font-size: 44px;
+        }
+        .result-title {
+          font-size: 52px;
+        }
+        .result-bottom-grid {
+          grid-template-columns: 7fr 5fr;
+          gap: 24px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app-wrapper"></div>
+
+    <script>
+      const ROLE_LABELS = {
+        PM: "기획 (PM)",
+        DEV: "개발",
+        DESIGN: "디자인",
+        DATA: "데이터",
+      };
+
+      const QUIZ_QUESTIONS = [
+        {
+          id: 1,
+          situation: "조별과제 첫 모임",
+          question: "새 조별과제 첫 회의, 다들 어색해서 아무 말도 안 꺼낼 때 나는?",
+          options: [
+            { id: "A", label: "오늘 정해야 할 주제와 역할 분담부터 먼저 꺼내자고 제안한다", role: "PM" },
+            { id: "B", label: "발표 자료 분위기나 참고할 만한 예시 이미지를 먼저 찾아 띄워본다", role: "DESIGN" },
+          ],
+        },
+        {
+          id: 2,
+          situation: "동아리 축제 부스",
+          question: "동아리 부스 운영을 맡게 됐다. 가장 먼저 머리에 떠오르는 고민은?",
+          options: [
+            { id: "A", label: "사람들이 줄 서지 않고 자연스럽게 구경할 수 있는 순서와 운영 동선", role: "PM" },
+            { id: "B", label: "QR 주문이나 자동 집계 폼처럼 현장에서 편하게 쓸 수 있는 도구 세팅", role: "DEV" },
+          ],
+        },
+        {
+          id: 3,
+          situation: "카페 아르바이트",
+          question: "주말 알바 중 유독 특정 시간대에만 손님이 몰리는 걸 발견했다.",
+          options: [
+            { id: "A", label: "최근 몇 주간 시간대별 매출과 인기 메뉴 기록을 슬쩍 비교해 본다", role: "DATA" },
+            { id: "B", label: "피크 타임에 맞춰 재료 준비와 파트너 역할을 미리 나눠두자고 건의한다", role: "PM" },
+          ],
+        },
+        {
+          id: 4,
+          situation: "발표 전날 밤",
+          question: "팀 발표 자료를 최종 점검할 때 내 눈이 가장 먼저 가는 부분은?",
+          options: [
+            { id: "A", label: "주장을 뒷받침하는 출처와 설문 수치에 앞뒤 모순이 없는지", role: "DATA" },
+            { id: "B", label: "슬라이드 여백과 글씨 크기, 색감이 한눈에 깔끔하게 읽히는지", role: "DESIGN" },
+          ],
+        },
+        {
+          id: 5,
+          situation: "시험 일주일 전",
+          question: "전공 시험을 앞두고 나만의 공부 정리 방식에 더 가까운 쪽은?",
+          options: [
+            { id: "A", label: "개념들이 어떻게 연결되는지 원리부터 이해하고 직접 응용 문제를 푼다", role: "DEV" },
+            { id: "B", label: "지난 기출문제를 모아 자주 나오는 유형과 출제 비중부터 분류한다", role: "DATA" },
+          ],
+        },
+        {
+          id: 6,
+          situation: "신입 부원 모집",
+          question: "동아리 홍보 프로젝트를 시작한다면 내가 꼭 맡고 싶은 역할은?",
+          options: [
+            { id: "A", label: "눈길을 사로잡는 포스터 색감과 카드뉴스 레이아웃 디자인하기", role: "DESIGN" },
+            { id: "B", label: "지원자가 편하게 신청하고 자동 확인 안내를 받는 신청 페이지 만들기", role: "DEV" },
+          ],
+        },
+        {
+          id: 7,
+          situation: "조별과제 마감 위기",
+          question: "제출 전날 밤, 팀원 한 명의 파트 자료가 비어 있고 연락이 닿지 않는다.",
+          options: [
+            { id: "A", label: "전체 구조에서 빠진 핵심 연결고리를 파악해 내가 직접 빈칸을 채워 완성한다", role: "DEV" },
+            { id: "B", label: "남은 분량을 빠르게 쪼개서 마감 시간 안에 끝낼 수 있게 역할을 다시 배분한다", role: "PM" },
+          ],
+        },
+        {
+          id: 8,
+          situation: "과외·후배 멘토링",
+          question: "후배나 학생에게 어려운 내용을 쉽게 설명해 줄 때 내가 주로 쓰는 방법은?",
+          options: [
+            { id: "A", label: "실제 합격 사례나 점수 변화 같은 구체적인 숫자와 근거를 들어 납득시킨다", role: "DATA" },
+            { id: "B", label: "직관적인 그림이나 비유, 한눈에 들어오는 도식으로 그려서 보여준다", role: "DESIGN" },
+          ],
+        },
+        {
+          id: 9,
+          situation: "학교 앱 사용 중",
+          question: "자주 쓰는 대학생 앱이 묘하게 불편할 때 내 머릿속에 먼저 스치는 생각은?",
+          options: [
+            { id: "A", label: "버튼 위치랑 안내 문구, 화면 배치만 다듬어도 훨씬 쓰기 편할 텐데 아쉽다", role: "DESIGN" },
+            { id: "B", label: "왜 이 화면에서 로딩이 느리지? 알림 기능이 어떤 구조로 꼬인 걸까 궁금하다", role: "DEV" },
+          ],
+        },
+        {
+          id: 10,
+          situation: "동아리 MT 준비",
+          question: "30명이 함께 가는 동아리 MT 준비 팀이 됐다. 가장 먼저 펼치는 문서는?",
+          options: [
+            { id: "A", label: "출발부터 귀가까지 시간표와 돌발 상황별 진행 시나리오", role: "PM" },
+            { id: "B", label: "1인당 예상 회비, 숙소·식비 단가 비교표와 지출 예산 계산표", role: "DATA" },
+          ],
+        },
+        {
+          id: 11,
+          situation: "대학생 공모전 회의",
+          question: "공모전 아이디어 회의를 할 때 내가 가장 신나서 목소리가 커지는 순간은?",
+          options: [
+            { id: "A", label: "우리 아이디어를 한눈에 보여주는 이름과 로고, 화면 시안을 구체화할 때", role: "DESIGN" },
+            { id: "B", label: "누가 왜 이 서비스를 쓸지, 심사 기준에 어떻게 맞출지 큰 그림을 세울 때", role: "PM" },
+          ],
+        },
+        {
+          id: 12,
+          situation: "아르바이트 마감 정산",
+          question: "매장 알바 중 매일 똑같이 반복되는 마감 정산 업무가 번거롭게 느껴진다.",
+          options: [
+            { id: "A", label: "엑셀 수식이나 단축키를 짜서 클릭 몇 번으로 끝나게 자동화해 본다", role: "DEV" },
+            { id: "B", label: "요일별 재고 소진 속도를 기록해 다음 발주 수량을 정확히 예측해 본다", role: "DATA" },
+          ],
+        },
+      ];
+
+      const JOB_ROLE_RESULTS = {
+        PM: {
+          id: "PM",
+          name: "기획형 PM",
+          englishLabel: "Product Manager & Planner",
+          nickname: "흩어진 아이디어를 한 줄로 엮는 팀의 나침반",
+          description:
+            '전체 흐름을 한눈에 보고 팀원들의 강점을 연결해 목표를 현실로 만드는 스타일이에요. 조별과제나 동아리 행사에서도 "우리가 왜 이걸 해야 하지?"와 "누가 언제까지 맡을까?"를 자연스럽게 정리하곤 하죠. 직무 배경지식이 없어도 괜찮아요. 사용자의 불편을 포착하고 우선순위를 세우는 감각이 이미 훌륭한 기획자의 자질이랍니다.',
+          strengths: [
+            "복잡한 문제의 핵심 목표를 빠르게 정리해요",
+            "서로 다른 성향의 팀원 사이에서 소통을 매끄럽게 이어줘요",
+            "일정과 우선순위를 세워 마감까지 끝내는 추진력이 있어요",
+          ],
+          recommendations: [
+            { title: "서비스기획 · UX 개론", category: "추천 과목", reason: "사용자 문제를 정의하고 서비스 화면 구조를 설계하는 첫걸음을 배워요." },
+            { title: "컴퓨터활용능력 1급", category: "추천 자격증", reason: "기획서 작성과 일정·예산 문서화 역량을 탄탄하게 증명할 수 있어요." },
+            { title: "마케팅원론 · 경영학원론", category: "추천 과목", reason: "고객이 원하는 가치와 시장 흐름을 읽는 비즈니스 시야를 넓혀줘요." },
+          ],
+          starterTip: "교내 창업 동아리나 IT 연합 동아리에서 기획·PM 포지션으로 작은 프로젝트를 한 번 완주해 보는 걸 추천해요.",
+          theme: {
+            pageGradient: "linear-gradient(180deg, #F4EEFF 0%, #EDE4FF 55%, #F7F3FF 100%)",
+            heroBg: "linear-gradient(135deg, #FFFFFF 0%, #F4EEFF 100%)",
+            cardBorder: "#DFD2FF",
+            softSurface: "#F3EDFF",
+            accent: "#6D28D9",
+            accentText: "#5B21B6",
+            inkPrimary: "#22124D",
+            barTrack: "#EDE6FF",
+            barMuted: "#C4B5FD",
+          },
+        },
+        DEV: {
+          id: "DEV",
+          name: "구현형 개발자",
+          englishLabel: "Software Developer",
+          nickname: "머릿속 상상을 돌아가는 결과물로 뚝딱 만드는 해결사",
+          description:
+            '복잡한 상황을 원인과 결과의 논리로 나누고, 직접 손으로 만들어 작동할 때 가장 큰 쾌감을 느끼는 스타일이에요. 반복되는 번거로운 일을 보면 "이걸 자동으로 처리할 순 없을까?" 고민하고, 막힌 문제가 풀릴 때까지 차근차근 파고드는 집중력이 돋보여요. 코딩을 아직 몰라도 단계별로 구조를 세워 문제를 해결하는 힘이 강력한 무기입니다.',
+          strengths: [
+            "문제의 원인을 단계별로 쪼개어 논리적으로 파악해요",
+            "반복 작업을 줄이고 효율적인 방법을 찾는 데 익숙해요",
+            "아이디어를 실제 작동하는 결과물로 완성할 때까지 몰입해요",
+          ],
+          recommendations: [
+            { title: "파이썬(Python) 프로그래밍 입문", category: "추천 과목", reason: "비전공자도 가장 쉽게 코딩의 논리와 자동화 감각을 익힐 수 있어요." },
+            { title: "정보처리기사 · SQLD", category: "추천 자격증", reason: "소프트웨어 동작 구조와 데이터베이스 기초를 체계적으로 다질 수 있어요." },
+            { title: "웹 프로그래밍 기초", category: "추천 과목", reason: "내가 만든 화면과 기능이 브라우저에서 바로 돌아가는 재미를 느껴보세요." },
+          ],
+          starterTip: "거창한 앱보다 학교 시간표 알리미나 동아리 신청 페이지처럼 내 주변 불편을 해결하는 작은 도구를 직접 만들어 보세요.",
+          theme: {
+            pageGradient: "linear-gradient(180deg, #EEF2FF 0%, #E2E8FF 55%, #F4F6FF 100%)",
+            heroBg: "linear-gradient(135deg, #FFFFFF 0%, #ECEFFF 100%)",
+            cardBorder: "#CFD8FF",
+            softSurface: "#EEF1FF",
+            accent: "#4338CA",
+            accentText: "#3730A3",
+            inkPrimary: "#181D4B",
+            barTrack: "#E6EAFF",
+            barMuted: "#A5B4FC",
+          },
+        },
+        DESIGN: {
+          id: "DESIGN",
+          name: "감각형 디자이너",
+          englishLabel: "UX/UI & Brand Designer",
+          nickname: "작은 디테일 하나로 사람들의 마음을 움직이는 시선 설계자",
+          description:
+            "남들이 무심코 지나치는 글자 간격, 색감, 안내 문구의 어색함까지 단번에 알아채는 섬세한 눈을 가졌어요. 같은 내용이라도 상대방이 보기 편하고 매력적으로 느끼도록 다듬는 과정에서 에너지를 얻는 편이죠. 단순히 예쁘게 꾸미는 것을 넘어, 쓰는 사람의 입장에서 가장 자연스러운 경험을 설계하는 데 재능이 빛납니다.",
+          strengths: [
+            "사용자가 어디서 막히고 불편해하는지 직관적으로 포착해요",
+            "복잡한 정보를 보기 쉽고 매력적인 시각 구조로 정리해요",
+            "색감, 여백, 문구 톤 같은 작은 완성도 차이를 만들어내요",
+          ],
+          recommendations: [
+            { title: "시각디자인 · UI/UX 디자인 기초", category: "추천 과목", reason: "정보를 보기 쉽게 배치하고 사용자 흐름을 설계하는 기본기를 익혀요." },
+            { title: "GTQ(그래픽기술자격) 1급", category: "추천 자격증", reason: "포토샵·일러스트 등 그래픽 툴을 자유자재로 다루는 출발점이 돼요." },
+            { title: "인간공학 · 사용자 리서치", category: "추천 과목", reason: "사람의 시선과 행동 패턴을 근거로 설득력 있는 디자인을 만들 수 있어요." },
+          ],
+          starterTip: '자주 쓰는 앱의 불편한 화면 1개를 골라 Figma로 "나라면 이렇게 바꿀 텐데" 리디자인 연습을 해보는 걸 추천해요.',
+          theme: {
+            pageGradient: "linear-gradient(180deg, #FDF0FA 0%, #F7E1F4 55%, #FEF6FC 100%)",
+            heroBg: "linear-gradient(135deg, #FFFFFF 0%, #FCEEF9 100%)",
+            cardBorder: "#F1CCE9",
+            softSurface: "#FCF0FA",
+            accent: "#A21CAF",
+            accentText: "#86198F",
+            inkPrimary: "#3A113E",
+            barTrack: "#F9E6F5",
+            barMuted: "#E8A8DE",
+          },
+        },
+        DATA: {
+          id: "DATA",
+          name: "탐구형 데이터 분석가",
+          englishLabel: "Data Analyst",
+          nickname: "숫자와 기록 속에서 숨은 정답을 찾아내는 탐정",
+          description:
+            '감이나 분위기보다 객관적인 근거와 패턴을 확인할 때 비로소 마음이 놓이는 스타일이에요. 알바 매출이 유독 잘 나온 날의 이유를 따져보거나, 여러 자료를 표로 정리해 핵심을 뽑아내는 데 강점이 있죠. 통계가 낯설더라도 "왜 이런 결과가 나왔을까?"를 끝까지 추적하는 호기심이 데이터 직무의 가장 큰 자산입니다.',
+          strengths: [
+            "막연한 추측 대신 사실과 숫자를 근거로 판단해요",
+            "흩어진 기록에서 규칙과 변화의 원인을 잘 발견해요",
+            "복잡한 정보를 표와 차트로 요약해 설득력 있게 전달해요",
+          ],
+          recommendations: [
+            { title: "ADsP (데이터분석 준전문가)", category: "추천 자격증", reason: "비전공자 대학생도 단기간에 도전하기 좋은 대표적인 데이터 입문 자격증이에요." },
+            { title: "SQLD (SQL 개발자)", category: "추천 자격증", reason: "실무에서 원하는 데이터를 직접 뽑아보고 가공하는 핵심 언어를 배워요." },
+            { title: "기초통계학 · 데이터 리터러시", category: "추천 과목", reason: "숫자의 의미를 올바르게 해석하고 근거 있는 결론을 내리는 힘을 길러줘요." },
+          ],
+          starterTip: "공공데이터포털이나 교내 설문 데이터를 활용해 궁금했던 주제를 엑셀·그래프로 정리해 블로그에 기록해 보세요.",
+          theme: {
+            pageGradient: "linear-gradient(180deg, #EDF5FF 0%, #DFEDFF 55%, #F4F9FF 100%)",
+            heroBg: "linear-gradient(135deg, #FFFFFF 0%, #ECF4FF 100%)",
+            cardBorder: "#C9DFFF",
+            softSurface: "#EDF4FF",
+            accent: "#1D4ED8",
+            accentText: "#1E40AF",
+            inkPrimary: "#122752",
+            barTrack: "#E3EEFF",
+            barMuted: "#93C5FD",
+          },
+        },
+      };
+
+      function getRoleSvg(roleId) {
+        const svgs = {
+          HERO: `<svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="400" height="300" fill="#F5F2FF"/>
+            <circle cx="320" cy="68" r="44" fill="#E6DBFF"/>
+            <circle cx="82" cy="236" r="56" fill="#EBE3FF"/>
+            <rect x="64" y="64" width="196" height="148" rx="18" fill="#FFFFFF" stroke="#D8CBFF" stroke-width="2"/>
+            <rect x="84" y="88" width="90" height="12" rx="6" fill="#DDD1FE"/>
+            <rect x="84" y="112" width="150" height="10" rx="5" fill="#EDE7FF"/>
+            <rect x="84" y="132" width="124" height="10" rx="5" fill="#EDE7FF"/>
+            <rect x="84" y="160" width="68" height="28" rx="10" fill="#6D28D9"/>
+            <circle cx="282" cy="174" r="58" fill="#FFFFFF" stroke="#C4B5FD" stroke-width="3"/>
+            <circle cx="282" cy="174" r="44" fill="#F3EEFF"/>
+            <polygon points="282,138 293,174 282,210 271,174" fill="#6D28D9"/>
+            <polygon points="282,138 293,174 271,174" fill="#8B5CF6"/>
+            <circle cx="282" cy="174" r="6" fill="#FFFFFF"/>
+          </svg>`,
+          PM: `<svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="320" height="320" fill="#F3EDFF"/>
+            <rect x="44" y="54" width="232" height="212" rx="22" fill="#FFFFFF" stroke="#DFD2FF" stroke-width="2"/>
+            <rect x="66" y="82" width="84" height="44" rx="12" fill="#EDE6FF"/>
+            <rect x="78" y="96" width="56" height="8" rx="4" fill="#6D28D9"/>
+            <rect x="78" y="110" width="38" height="6" rx="3" fill="#A78BFA"/>
+            <rect x="170" y="138" width="84" height="44" rx="12" fill="#6D28D9"/>
+            <rect x="182" y="152" width="56" height="8" rx="4" fill="#FFFFFF"/>
+            <rect x="182" y="166" width="40" height="6" rx="3" fill="#DDD6FE"/>
+            <rect x="66" y="194" width="110" height="44" rx="12" fill="#F5F0FF" stroke="#C4B5FD" stroke-width="2"/>
+            <circle cx="88" cy="216" r="10" fill="#6D28D9"/>
+            <path d="M84 216L87 219L93 213" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="108" y="212" width="52" height="8" rx="4" fill="#5B21B6"/>
+            <path d="M150 104H194V138" stroke="#8B5CF6" stroke-width="3" stroke-dasharray="5 4" stroke-linecap="round"/>
+          </svg>`,
+          DEV: `<svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="320" height="320" fill="#EEF1FF"/>
+            <rect x="42" y="56" width="236" height="176" rx="20" fill="#1E1B4B"/>
+            <circle cx="68" cy="78" r="5" fill="#818CF8"/>
+            <circle cx="86" cy="78" r="5" fill="#A5B4FC"/>
+            <circle cx="104" cy="78" r="5" fill="#C7D2FE"/>
+            <path d="M96 122L74 144L96 166" stroke="#A5B4FC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M224 122L246 144L224 166" stroke="#A5B4FC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M172 114L148 174" stroke="#6366F1" stroke-width="6" stroke-linecap="round"/>
+            <rect x="76" y="206" width="76" height="58" rx="14" fill="#FFFFFF" stroke="#CFD8FF" stroke-width="2"/>
+            <rect x="168" y="206" width="76" height="58" rx="14" fill="#4338CA"/>
+            <rect x="92" y="228" width="44" height="12" rx="6" fill="#4338CA"/>
+            <rect x="184" y="228" width="44" height="12" rx="6" fill="#C7D2FE"/>
+          </svg>`,
+          DESIGN: `<svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="320" height="320" fill="#FCF0FA"/>
+            <rect x="50" y="58" width="164" height="196" rx="20" fill="#FFFFFF" stroke="#F1CCE9" stroke-width="2"/>
+            <rect x="70" y="80" width="124" height="66" rx="12" fill="#F8E3F6"/>
+            <circle cx="132" cy="113" r="18" fill="#A21CAF"/>
+            <rect x="70" y="164" width="90" height="10" rx="5" fill="#D946EF" fill-opacity="0.35"/>
+            <rect x="70" y="184" width="124" height="10" rx="5" fill="#F3DDF1"/>
+            <rect x="70" y="210" width="76" height="24" rx="12" fill="#A21CAF"/>
+            <rect x="188" y="128" width="84" height="132" rx="16" fill="#FFFFFF" stroke="#E8A8DE" stroke-width="2"/>
+            <rect x="202" y="144" width="56" height="28" rx="8" fill="#A21CAF"/>
+            <rect x="202" y="182" width="56" height="28" rx="8" fill="#E879F9"/>
+            <rect x="202" y="220" width="56" height="28" rx="8" fill="#F5D0FE"/>
+          </svg>`,
+          DATA: `<svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="320" height="320" fill="#EDF4FF"/>
+            <rect x="44" y="56" width="232" height="208" rx="22" fill="#FFFFFF" stroke="#C9DFFF" stroke-width="2"/>
+            <rect x="72" y="176" width="28" height="62" rx="8" fill="#BFDBFE"/>
+            <rect x="114" y="142" width="28" height="96" rx="8" fill="#93C5FD"/>
+            <rect x="156" y="112" width="28" height="126" rx="8" fill="#3B82F6"/>
+            <rect x="198" y="86" width="28" height="152" rx="8" fill="#1D4ED8"/>
+            <path d="M84 152L128 122L170 96L212 72" stroke="#1E40AF" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="212" cy="72" r="7" fill="#1D4ED8" stroke="#FFFFFF" stroke-width="3"/>
+          </svg>`,
+        };
+        return svgs[roleId] || svgs.HERO;
+      }
+
+      // Application State
+      let stage = "start"; // 'start' | 'quiz' | 'result'
+      let currentIndex = 0;
+      let answers = {};
+      let isTransitioning = false;
+      let transitionTimer = null;
+      let copiedFeedback = false;
+
+      const appEl = document.getElementById("app");
+
+      function calculateResult() {
+        const scores = { PM: 0, DEV: 0, DESIGN: 0, DATA: 0 };
+        const lastChosen = { PM: -1, DEV: -1, DESIGN: -1, DATA: -1 };
+
+        QUIZ_QUESTIONS.forEach((q, idx) => {
+          const picked = answers[q.id];
+          if (picked) {
+            scores[picked.role] += 1;
+            lastChosen[picked.role] = idx;
+          }
+        });
+
+        const sorted = Object.keys(scores).sort((a, b) => {
+          if (scores[b] !== scores[a]) return scores[b] - scores[a];
+          return lastChosen[b] - lastChosen[a];
+        });
+
+        return {
+          primary: JOB_ROLE_RESULTS[sorted[0]],
+          secondary: scores[sorted[1]] >= 3 ? JOB_ROLE_RESULTS[sorted[1]] : null,
+          scores,
+        };
+      }
+
+      function render() {
+        if (stage === "start") {
+          appEl.style.background = "";
+          appEl.innerHTML = `
+            <main class="container start-shell">
+              <section class="card-surface animate-enter">
+                <div class="start-grid">
+                  <div class="start-visual">${getRoleSvg("HERO")}</div>
+                  <div class="start-copy">
+                    <p class="kicker">대학생 2~4학년을 위한 진로 탐색</p>
+                    <h1 class="start-title">나에게 맞는<br />직무 유형 테스트</h1>
+                    <p class="start-desc">
+                      직무 용어를 잘 몰라도 괜찮아요. 조별과제, 동아리, 아르바이트처럼
+                      익숙한 대학생활 12가지 장면에서 나다운 선택을 고르면 어울리는 직무와
+                      지금 준비할 과목·자격증을 알려드릴게요.
+                    </p>
+                    <div class="start-meta">
+                      <span>총 12문항</span>
+                      <span aria-hidden="true">·</span>
+                      <span>약 2분 소요</span>
+                      <span aria-hidden="true">·</span>
+                      <span>기획 · 개발 · 디자인 · 데이터</span>
+                    </div>
+                    <button type="button" id="start-btn" class="btn-primary">
+                      <span>시작하기</span>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </main>
+          `;
+
+          document.getElementById("start-btn").addEventListener("click", () => {
+            answers = {};
+            currentIndex = 0;
+            stage = "quiz";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            render();
+          });
+          return;
+        }
+
+        if (stage === "quiz") {
+          appEl.style.background = "";
+          const q = QUIZ_QUESTIONS[currentIndex];
+          const total = QUIZ_QUESTIONS.length;
+          const pct = Math.round(((currentIndex + 1) / total) * 100);
+          const prevSelected = answers[q.id];
+
+          appEl.innerHTML = `
+            <div class="quiz-container">
+              <header>
+                <div class="quiz-header-row">
+                  ${
+                    currentIndex > 0
+                      ? `<button type="button" id="back-btn" class="btn-back">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                          <span>이전</span>
+                        </button>`
+                      : `<span class="quiz-brand">직무 유형 테스트</span>`
+                  }
+                  <div class="font-display-num quiz-counter">${currentIndex + 1}/${total}</div>
+                </div>
+                <div class="progress-track" role="progressbar" aria-valuenow="${currentIndex + 1}" aria-valuemin="1" aria-valuemax="${total}">
+                  <div class="progress-fill" style="width: ${pct}%"></div>
+                </div>
+              </header>
+
+              <main class="quiz-stage">
+                <section class="question-card animate-enter">
+                  <p class="question-situation">Q${q.id}. ${q.situation}</p>
+                  <h2 class="question-title">${q.question}</h2>
+                  <div class="options-list">
+                    ${q.options
+                      .map((opt) => {
+                        const selected = prevSelected && prevSelected.id === opt.id;
+                        return `
+                          <button type="button" class="option-btn ${selected ? "is-selected" : ""}" data-opt="${opt.id}">
+                            <div class="option-left">
+                              <span class="font-display-num option-badge">${opt.id}</span>
+                              <span class="option-label">${opt.label}</span>
+                            </div>
+                            <span class="option-check" aria-hidden="true">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                            </span>
+                          </button>
+                        `;
+                      })
+                      .join("")}
+                  </div>
+                </section>
+              </main>
+            </div>
+          `;
+
+          if (currentIndex > 0) {
+            document.getElementById("back-btn").addEventListener("click", () => {
+              if (isTransitioning) return;
+              currentIndex = Math.max(0, currentIndex - 1);
+              render();
+            });
+          }
+
+          document.querySelectorAll(".option-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (isTransitioning) return;
+              isTransitioning = true;
+
+              const optId = btn.getAttribute("data-opt");
+              const chosen = q.options.find((o) => o.id === optId);
+
+              document.querySelectorAll(".option-btn").forEach((el) => {
+                el.classList.remove("is-selected", "animate-choice-pop");
+                el.disabled = true;
+              });
+
+              btn.classList.add("is-selected", "animate-choice-pop");
+              answers[q.id] = chosen;
+
+              if (transitionTimer) clearTimeout(transitionTimer);
+              transitionTimer = setTimeout(() => {
+                isTransitioning = false;
+                if (currentIndex + 1 < total) {
+                  currentIndex += 1;
+                } else {
+                  stage = "result";
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+                render();
+              }, 320);
+            });
+          });
+          return;
+        }
+
+        if (stage === "result") {
+          const { primary, secondary, scores } = calculateResult();
+          const t = primary.theme;
+
+          appEl.style.background = t.pageGradient;
+          appEl.style.setProperty("--role-hero-bg", t.heroBg);
+          appEl.style.setProperty("--role-border", t.cardBorder);
+          appEl.style.setProperty("--role-soft", t.softSurface);
+          appEl.style.setProperty("--role-accent", t.accent);
+          appEl.style.setProperty("--role-accent-text", t.accentText);
+          appEl.style.setProperty("--role-ink", t.inkPrimary);
+          appEl.style.setProperty("--role-bar-track", t.barTrack);
+
+          const orderedScores = Object.keys(scores)
+            .map((id) => ({ id, label: ROLE_LABELS[id], count: scores[id] }))
+            .sort((a, b) => b.count - a.count);
+
+          appEl.innerHTML = `
+            <main class="container animate-enter">
+              <div class="result-stack">
+                <section class="result-hero-card">
+                  <div class="result-hero-grid">
+                    <div class="result-visual">${getRoleSvg(primary.id)}</div>
+                    <div class="result-copy">
+                      <div class="result-kicker">
+                        <span style="color: ${t.accent}">나의 직무 유형</span>
+                        <span aria-hidden="true" style="color: #8E82AA">·</span>
+                        <span class="font-display-num" style="color: #685D88">${primary.englishLabel}</span>
+                      </div>
+                      <h1 class="result-title">${primary.name}</h1>
+                      <p class="result-nickname">“${primary.nickname}”</p>
+                      <p class="result-desc">${primary.description}</p>
+                      <div class="strengths-box">
+                        <p class="strengths-heading">이런 강점이 돋보여요</p>
+                        <ul class="strengths-list">
+                          ${primary.strengths
+                            .map(
+                              (s) => `<li><span class="strength-dot" aria-hidden="true"></span><span>${s}</span></li>`
+                            )
+                            .join("")}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <div class="result-bottom-grid">
+                  <section class="result-panel">
+                    <div class="panel-header">
+                      <h2 class="panel-title">추천 자격증 · 과목 3가지</h2>
+                      <span class="panel-sub">대학생 입문 기준</span>
+                    </div>
+                    <ol class="rec-list">
+                      ${primary.recommendations
+                        .map(
+                          (rec, idx) => `
+                            <li class="rec-item">
+                              <span class="font-display-num rec-num">0${idx + 1}</span>
+                              <div>
+                                <div class="rec-title-row">
+                                  <h3 class="rec-title">${rec.title}</h3>
+                                  <span class="rec-cat">· ${rec.category}</span>
+                                </div>
+                                <p class="rec-reason">${rec.reason}</p>
+                              </div>
+                            </li>
+                          `
+                        )
+                        .join("")}
+                    </ol>
+                  </section>
+
+                  <section class="result-panel" style="display:flex;flex-direction:column;justify-content:space-between;">
+                    <div>
+                      <h2 class="panel-title">내 일하는 스타일 분포</h2>
+                      <p class="panel-sub" style="display:block;margin-top:4px;">12개 질문에서 선택한 성향 비율이에요</p>
+                      <div class="dist-list">
+                        ${orderedScores
+                          .map((item) => {
+                            const isTop = item.id === primary.id;
+                            const barPct = Math.max(Math.round((item.count / 6) * 100), 6);
+                            return `
+                              <div>
+                                <div class="dist-row-head">
+                                  <span style="font-weight:${isTop ? "700" : "600"};color:${isTop ? t.accentText : "#463D62"}">${item.label}</span>
+                                  <span class="font-display-num" style="font-size:14px;font-weight:700;color:#5F557D">${item.count}/6회</span>
+                                </div>
+                                <div class="dist-track">
+                                  <div class="dist-fill" style="width:${barPct}%;background:${isTop ? t.accent : t.barMuted}"></div>
+                                </div>
+                              </div>
+                            `;
+                          })
+                          .join("")}
+                      </div>
+                      ${
+                        secondary
+                          ? `<p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:#524870;">함께 높게 나온 성향: <strong style="color:#1F1638">${secondary.name}</strong> 역량도 잘 어울려요.</p>`
+                          : ""
+                      }
+                    </div>
+                    <div class="starter-tip">
+                      <p class="starter-tip-label">이번 학기 작은 실천 팁</p>
+                      <p class="starter-tip-text">${primary.starterTip}</p>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="result-actions">
+                  <button type="button" id="share-btn" class="btn-share">
+                    ${
+                      copiedFeedback
+                        ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${t.accent}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span style="color:${t.accentText}">클립보드에 복사되었어요!</span>`
+                        : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${t.accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg><span>공유하기</span>`
+                    }
+                  </button>
+                  <button type="button" id="restart-btn" class="btn-restart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>다시하기</span>
+                  </button>
+                </div>
+              </div>
+            </main>
+          `;
+
+          document.getElementById("share-btn").addEventListener("click", async () => {
+            const summary = [
+              "[나에게 맞는 직무 유형 테스트 결과]",
+              `나의 직무 유형: ${primary.name}`,
+              `"${primary.nickname}"`,
+              "",
+              primary.description,
+              "",
+              "추천 자격증·과목:",
+              ...primary.recommendations.map(
+                (r, idx) => `${idx + 1}. ${r.title} (${r.category})`
+              ),
+            ].join("\n");
+
+            let ok = false;
+            try {
+              if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(summary);
+                ok = true;
+              }
+            } catch {
+              ok = false;
+            }
+
+            if (!ok) {
+              try {
+                const ta = document.createElement("textarea");
+                ta.value = summary;
+                ta.setAttribute("readonly", "");
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                ok = document.execCommand("copy");
+                document.body.removeChild(ta);
+              } catch {
+                ok = false;
+              }
+            }
+
+            if (ok) {
+              copiedFeedback = true;
+              render();
+              setTimeout(() => {
+                copiedFeedback = false;
+                if (stage === "result") render();
+              }, 2400);
+            }
+          });
+
+          document.getElementById("restart-btn").addEventListener("click", () => {
+            answers = {};
+            currentIndex = 0;
+            copiedFeedback = false;
+            stage = "start";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            render();
+          });
+        }
+      }
+
+      render();
+    </script>
+  </body>
+</html>
